@@ -37,7 +37,7 @@ class ResourcePolicy
      */
     public function update(User $user, Resource $resource): bool
     {
-        return false;
+        return $user->id === $resource->topic->track->user_id;
     }
 
     /**
@@ -45,7 +45,7 @@ class ResourcePolicy
      */
     public function delete(User $user, Resource $resource): bool
     {
-        return false;
+        return $user->id === $resource->topic->track->user_id;
     }
 
     /**

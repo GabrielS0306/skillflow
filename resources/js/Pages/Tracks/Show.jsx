@@ -2,9 +2,13 @@ import { useState } from 'react';
 import { Head, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import TopicItem from '@/Components/TopicItem';
+import NotesDrawer from '@/Components/NotesDrawer';
 
 export default function Show({ track }) {
     const [title, setTitle] = useState('');
+    const [activeTopicId, setActiveTopicId] = useState(null);
+
+    const activeTopic = track.topics.find((t) => t.id === activeTopicId) ?? null;
 
     function addTopic(e) {
         e.preventDefault();
@@ -42,11 +46,17 @@ export default function Show({ track }) {
                 ) : (
                     <div className="space-y-2">
                         {track.topics.map((topic) => (
-                            <TopicItem key={topic.id} topic={topic} />
+                            <TopicItem
+                                key={topic.id}
+                                topic={topic}
+                                onOpenNotes={(t) => setActiveTopicId(t.id)}
+                            />
                         ))}
                     </div>
                 )}
             </div>
+
+            <NotesDrawer topic={activeTopic} onClose={() => setActiveTopicId(null)} />
         </AuthenticatedLayout>
     );
 }

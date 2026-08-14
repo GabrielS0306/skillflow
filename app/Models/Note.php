@@ -14,7 +14,7 @@ class Note extends Model
     ];
 
     protected $casts = [
-        'is_pinned' => 'boolan',
+        'is_pinned' => 'boolean',
     ];
 
     public function topic() {

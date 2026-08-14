@@ -41,7 +41,7 @@ class TrackController extends Controller
         $this->authorize('view', $track);
 
         $track->load(['topics' => function ($query) {
-            $query->orderBy('order');
+            $query->orderBy('order')->with(['notes', 'resources']);
         }]);
 
         return Inertia::render('Tracks/Show', [
