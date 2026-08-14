@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Track;
+use App\Policies\TrackPolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 
@@ -20,6 +23,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Vite::prefetch(concurrency: 3);
+        Gate::policy(Track::class, TrackPolicy::class);
     }
 }
