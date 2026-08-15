@@ -8,6 +8,25 @@ export default function NotesDrawer({ topic, onClose }) {
 
     const isOpen = topic !== null;
 
+    const [saving, setSaving] = useState(false);
+
+    function submit(e) {
+        e.preventDefault();
+        router.post(route('notes.store'), {
+            topic_id: topic.id,
+            title,
+            content,
+        }, {
+            preserveScroll: true,
+            onStart: () => setSaving(true),
+            onFinish: () => setSaving(false),
+            onSuccess: () => {
+                setTitle('');
+                setContent('');
+            },
+        });
+    }
+
     function submit(e) {
         e.preventDefault();
         router.post(route('notes.store'), {
@@ -114,8 +133,8 @@ export default function NotesDrawer({ topic, onClose }) {
                                 rows={3}
                                 required
                             />
-                            <button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-2 rounded-lg text-sm">
-                                Salvar anotação
+                            <button type="submit" disabled={saving} className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white py-2 rounded-lg text-sm">
+                                {saving ? 'Salvando...' : 'Salvar anotação'}
                             </button>
                         </form>
                     </div>

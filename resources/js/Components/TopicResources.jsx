@@ -4,6 +4,7 @@ import { router } from '@inertiajs/react';
 export default function TopicResources({ topic }) {
     const [title, setTitle] = useState('');
     const [url, setUrl] = useState('');
+    const [adding, setAdding] = useState(false);
 
     function addResource(e) {
         e.preventDefault();
@@ -13,6 +14,8 @@ export default function TopicResources({ topic }) {
             url,
         }, {
             preserveScroll: true,
+            onStart: () => setAdding(true),
+            onFinish: () => setAdding(false),
             onSuccess: () => {
                 setTitle('');
                 setUrl('');
@@ -54,7 +57,8 @@ export default function TopicResources({ topic }) {
                     placeholder="Título"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-1/3 bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-gray-100"
+                    disabled={adding}
+                    className="w-1/3 bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-gray-100 disabled:opacity-50"
                     required
                 />
                 <input
@@ -62,11 +66,12 @@ export default function TopicResources({ topic }) {
                     placeholder="https://..."
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
-                    className="flex-1 bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-gray-100"
+                    disabled={adding}
+                    className="flex-1 bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-gray-100 disabled:opacity-50"
                     required
                 />
-                <button type="submit" className="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 rounded text-xs">
-                    +
+                <button type="submit" disabled={adding} className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-3 py-1 rounded text-xs">
+                    {adding ? '...' : '+'}
                 </button>
             </form>
         </div>

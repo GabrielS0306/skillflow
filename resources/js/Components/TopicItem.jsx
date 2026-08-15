@@ -5,9 +5,14 @@ import TopicResources from './TopicResources';
 
 export default function TopicItem({ topic, onOpenNotes, activeSession }) {
     const [showResources, setShowResources] = useState(false);
+    const [toggling, setToggling] = useState(false);
 
     function toggle() {
-        router.patch(route('topics.toggle', topic.id), {}, { preserveScroll: true });
+        router.patch(route('topics.toggle', topic.id), {}, {
+            preserveScroll: true,
+            onStart: () => setToggling(true),
+            onFinish: () => setToggling(false),
+        });
     }
 
     function destroy() {
@@ -24,7 +29,8 @@ export default function TopicItem({ topic, onOpenNotes, activeSession }) {
                         type="checkbox"
                         checked={topic.is_completed}
                         onChange={toggle}
-                        className="w-5 h-5 rounded accent-emerald-500 cursor-pointer shrink-0"
+                        disabled={toggling}
+                        className="w-5 h-5 rounded accent-emerald-500 cursor-pointer shrink-0 disabled:opacity-50"
                     />
                     <span className={`truncate ${topic.is_completed ? 'line-through text-gray-500' : 'text-gray-100'}`}>
                         {topic.title}
