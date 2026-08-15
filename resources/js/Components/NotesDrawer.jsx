@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { router } from '@inertiajs/react';
+import EmptyState from '@/Components/EmptyState';
 
 export default function NotesDrawer({ topic, onClose }) {
     const [content, setContent] = useState('');
