@@ -9,6 +9,7 @@ use App\Http\Controllers\TopicController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\NoteSearchController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -42,6 +43,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/resources', [ResourceController::class, 'store'])->name('resources.store');
     Route::patch('/resources/{resource}', [ResourceController::class, 'update'])->name('resources.update');
     Route::delete('/resources/{resource}', [ResourceController::class, 'destroy'])->name('resources.destroy');
+
+    Route::get('/notes', [NoteSearchController::class, 'index'])->name('notes.index');
 });
 
 require __DIR__.'/auth.php';

@@ -38,6 +38,10 @@ export default function AuthenticatedLayout({ header, children }) {
                                 >
                                     Trilhas
                                 </NavLink>
+
+                                <NavLink href={route('notes.index')} active={route().current('notes.*')}>
+                                    Anotações
+                                </NavLink>
                             </div>
                         </div>
 
@@ -148,6 +152,10 @@ export default function AuthenticatedLayout({ header, children }) {
                             active={route().current('tracks.*')}
                         >
                             Trilhas
+                        </ResponsiveNavLink>
+                        
+                        <ResponsiveNavLink href={route('notes.index')} active={route().current('notes.*')}>
+                            Anotações
                         </ResponsiveNavLink>
                     </div>
 
