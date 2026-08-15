@@ -2,6 +2,7 @@ import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
+import Toast from '@/Components/Toast';
 import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
@@ -29,6 +30,13 @@ export default function AuthenticatedLayout({ header, children }) {
                                     active={route().current('dashboard')}
                                 >
                                     Dashboard
+                                </NavLink>
+
+                                <NavLink
+                                    href={route('tracks.index')}
+                                    active={route().current('tracks.*')}
+                                >
+                                    Trilhas
                                 </NavLink>
                             </div>
                         </div>
@@ -134,6 +142,13 @@ export default function AuthenticatedLayout({ header, children }) {
                         >
                             Dashboard
                         </ResponsiveNavLink>
+
+                        <ResponsiveNavLink
+                            href={route('tracks.index')}
+                            active={route().current('tracks.*')}
+                        >
+                            Trilhas
+                        </ResponsiveNavLink>
                     </div>
 
                     <div className="border-t border-gray-200 pb-1 pt-4">
@@ -171,6 +186,7 @@ export default function AuthenticatedLayout({ header, children }) {
             )}
 
             <main>{children}</main>
+            <Toast />
         </div>
     );
 }
