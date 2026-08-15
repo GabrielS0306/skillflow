@@ -6,7 +6,7 @@ import NotesDrawer from '@/Components/NotesDrawer';
 import EmptyState from '@/Components/EmptyState';
 import Modal from '@/Components/Modal';
 
-export default function Show({ track }) {
+export default function Show({ track, activeSession }) {
     const [activeTopicId, setActiveTopicId] = useState(null);
     const [showTopicModal, setShowTopicModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
@@ -105,6 +105,7 @@ export default function Show({ track }) {
                                 key={topic.id}
                                 topic={topic}
                                 onOpenNotes={(t) => setActiveTopicId(t.id)}
+                                activeSession={activeSession}
                             />
                         ))}
                     </div>

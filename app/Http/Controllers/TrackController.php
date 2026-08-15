@@ -55,8 +55,13 @@ class TrackController extends Controller
             $query->orderBy('order')->with(['notes', 'resources']);
         }]);
 
+        $activeSession = \App\Models\StudySession::where('user_id', auth()->id())
+            ->whereNull('ended_at')
+            ->first();
+
         return Inertia::render('Tracks/Show', [
             'track' => $track,
+            'activeSession' => $activeSession,
         ]);
     }
 

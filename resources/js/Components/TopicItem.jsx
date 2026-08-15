@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { router } from '@inertiajs/react';
 
-export default function TopicItem({ topic, onOpenNotes }) {
+export default function TopicItem({ topic, onOpenNotes, activeSession }) {
     const [showResources, setShowResources] = useState(false);
     const [resTitle, setResTitle] = useState('');
     const [resUrl, setResUrl] = useState('');
+
+    const isStudyingThis = activeSession?.topic_id === topic.id;
 
     function toggle() {
         router.patch(route('topics.toggle', topic.id), {}, { preserveScroll: true });
@@ -14,6 +16,14 @@ export default function TopicItem({ topic, onOpenNotes }) {
         if (confirm('Excluir este tópico?')) {
             router.delete(route('topics.destroy', topic.id), { preserveScroll: true });
         }
+    }
+
+    function startStudying() {
+        router.post(route('study-sessions.start', topic.id), {}, { preserveScroll: true });
+    }
+
+    function stopStudying() {
+        router.patch(route('study-sessions.stop', activeSession.id), {}, { preserveScroll: true });
     }
 
     function addResource(e) {
@@ -53,6 +63,19 @@ export default function TopicItem({ topic, onOpenNotes }) {
                 </div>
 
                 <div className="flex items-center gap-3">
+                    {isStudyingThis ? (
+                        <button onClick={stopStudying} className="text-sm text-red-400 hover:text-red-300 flex items-center gap-1">
+                            ⏹ Parar
+                        </button>
+                    ) : (
+                        <button
+                            onClick={startStudying}
+                            disabled={!!activeSession}
+                            className="text-sm text-emerald-400 hover:text-emerald-300 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1"
+                        >
+                            ▶ Estudar
+                        </button>
+                    )}
                     <button onClick={() => onOpenNotes(topic)} className="text-sm text-gray-400 hover:text-emerald-400">
                         Anotações {topic.notes?.length > 0 && `(${topic.notes.length})`}
                     </button>
@@ -71,15 +94,10 @@ export default function TopicItem({ topic, onOpenNotes }) {
                         <p className="text-xs text-gray-500">Nenhum recurso ainda.</p>
                     ) : (
                         topic.resources.map((resource) => (
-                            <div key={resource.id} className="flex items-center justify-between text-sm">
-                                <a
-                                    href={resource.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-blue-400 hover:underline truncate"
-                                >
+                            <div key={resource.id} className="flex items-center justify-between text-sm" href={resource.url}>
+                                <a target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline truncate">
                                     {resource.title}
-                                </a>
+                                </a>    
                                 <button onClick={() => destroyResource(resource.id)} className="text-gray-600 hover:text-red-400 text-xs ml-2">
                                     remover
                                 </button>

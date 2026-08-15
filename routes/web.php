@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NoteSearchController;
+use App\Http\Controllers\StudySessionController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -45,6 +46,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/resources/{resource}', [ResourceController::class, 'destroy'])->name('resources.destroy');
 
     Route::get('/notes', [NoteSearchController::class, 'index'])->name('notes.index');
+
+    Route::post('/topics/{topic}/study-sessions/start', [StudySessionController::class, 'start'])->name('study-sessions.start');
+    Route::patch('/study-sessions/{studySession}/stop', [StudySessionController::class, 'stop'])->name('study-sessions.stop');
 });
 
 require __DIR__.'/auth.php';
