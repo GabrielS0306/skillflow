@@ -1,12 +1,15 @@
 import { useState } from 'react';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import TrackCard from '@/Components/TrackCard';
-import EmptyState from '@/Components/EmptyState'; 
 import Modal from '@/Components/Modal';
+import EmptyState from '@/Components/EmptyState';
 
-export default function Index({ tracks }) {
+export default function Index({ tracks, filters }) {
     const [showModal, setShowModal] = useState(false);
+    const [search, setSearch] = useState(filters.search ?? '');
+    const [status, setStatus] = useState(filters.status ?? '');
+
     const { data, setData, post, processing, reset } = useForm({
         title: '',
         description: '',
@@ -22,15 +25,53 @@ export default function Index({ tracks }) {
         });
     }
 
+    function applyFilters(newSearch, newStatus) {
+        router.get(route('tracks.index'), { search: newSearch, status: newStatus }, {
+            preserveState: true,
+            replace: true,
+        });
+    }
+
+    function handleSearchChange(e) {
+        setSearch(e.target.value);
+        applyFilters(e.target.value, status);
+    }
+
+    function handleStatusChange(e) {
+        setStatus(e.target.value);
+        applyFilters(search, e.target.value);
+    }
+
     return (
         <AuthenticatedLayout header={<h2 className="text-xl font-semibold text-gray-100">Minhas Trilhas</h2>}>
             <Head title="Trilhas — SkillFlow" />
 
             <div className="py-8 max-w-5xl mx-auto px-4">
-                <div className="flex justify-end mb-6">
+                <div className="flex flex-col sm:flex-row gap-3 justify-between mb-6">
+                    <div className="flex flex-col sm:flex-row gap-3 flex-1">
+                        <input
+                            type="text"
+                            placeholder="Buscar trilhas..."
+                            value={search}
+                            onChange={handleSearchChange}
+                            className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-gray-100 text-sm flex-1"
+                        />
+                        <select
+                            value={status}
+                            onChange={handleStatusChange}
+                            className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-gray-100 text-sm"
+                        >
+                            <option value="">Todos os status</option>
+                            <option value="planejado">Planejado</option>
+                            <option value="em_andamento">Em andamento</option>
+                            <option value="pausado">Pausado</option>
+                            <option value="concluido">Concluído</option>
+                            <option value="arquivado">Arquivado</option>
+                        </select>
+                    </div>
                     <button
                         onClick={() => setShowModal(true)}
-                        className="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm"
+                        className="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm whitespace-nowrap"
                     >
                         + Nova trilha
                     </button>
@@ -38,8 +79,8 @@ export default function Index({ tracks }) {
 
                 {tracks.length === 0 ? (
                     <EmptyState
-                        title="Você ainda não tem nenhuma trilha"
-                        description="Crie sua primeira trilha para começar a organizar seus estudos."
+                        title={search || status ? 'Nenhuma trilha encontrada' : 'Você ainda não tem nenhuma trilha'}
+                        description={search || status ? 'Tente ajustar a busca ou os filtros.' : 'Crie sua primeira trilha para começar a organizar seus estudos.'}
                     />
                 ) : (
                     <div className="grid sm:grid-cols-2 gap-4">
@@ -83,4 +124,4 @@ export default function Index({ tracks }) {
             </Modal>
         </AuthenticatedLayout>
     );
-}
+}   

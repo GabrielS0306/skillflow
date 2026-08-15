@@ -4,28 +4,39 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use App\Models\Track;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreTrackRequest;
 use App\Http\Requests\UpdateTrackRequest;
 
 class TrackController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $tracks = auth()->user()->tracks()
-            ->withCount(['topics', 'topics as completed_topics_count' => function ($query) {
-                $query->where('is_completed', true);
-            }])
-            ->latest()
-            ->get()
-            ->map(function ($track) {
-                $track->progress = $track->topics_count > 0
-                    ? round(($track->completed_topics_count / $track->topics_count) * 100)
-                    : 0;
-                return $track;
+        ->when($request->search, function ($query, $search) {   
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
             });
+        })
+        ->when($request->status, function ($query, $status) {
+            $query->where('status', $status);
+        })
+        ->withCount(['topics', 'topics as completed_topics_count' => function ($query) {
+            $query->where('is_completed', true);
+        }])
+        ->latest()
+        ->get()
+        ->map(function ($track) {
+            $track->progress = $track->topics_count > 0
+                ? round(($track->completed_topics_count / $track->topics_count) * 100)
+                : 0;
+            return $track;
+        });
 
         return Inertia::render('Tracks/Index', [
             'tracks' => $tracks,
+            'filters' => $request->only(['search', 'status']),
         ]);
     }
 
