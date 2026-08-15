@@ -61,7 +61,10 @@ export default function NotesDrawer({ topic, onClose }) {
 
                         <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3">
                             {topic.notes.length === 0 ? (
-                                <p className="text-sm text-gray-500">Nenhuma anotação ainda.</p>
+                                <EmptyState
+                                    title="Nenhuma anotação ainda"
+                                    description="Registre o que você aprendeu sobre este tópico."
+                                />
                             ) : (
                                 [...topic.notes]
                                     .sort((a, b) => b.is_pinned - a.is_pinned)

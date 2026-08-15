@@ -3,6 +3,7 @@ import { Head, Link, useForm, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import TopicItem from '@/Components/TopicItem';
 import NotesDrawer from '@/Components/NotesDrawer';
+import EmptyState from '@/Components/EmptyState';
 import Modal from '@/Components/Modal';
 
 export default function Show({ track }) {
@@ -93,7 +94,10 @@ export default function Show({ track }) {
                 </div>
 
                 {track.topics.length === 0 ? (
-                    <p className="text-center text-gray-500 py-8">Nenhum tópico ainda. Adicione o primeiro acima.</p>
+                    <EmptyState
+                        title="Nenhum tópico ainda"
+                        description="Adicione o primeiro tópico para começar a estruturar esta trilha."
+                    />
                 ) : (
                     <div className="space-y-2">
                         {track.topics.map((topic) => (

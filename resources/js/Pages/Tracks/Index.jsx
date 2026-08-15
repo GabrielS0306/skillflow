@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Head, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import TrackCard from '@/Components/TrackCard';
+import EmptyState from '@/Components/EmptyState'; 
 import Modal from '@/Components/Modal';
 
 export default function Index({ tracks }) {
@@ -36,10 +37,10 @@ export default function Index({ tracks }) {
                 </div>
 
                 {tracks.length === 0 ? (
-                    <div className="text-center py-16 text-gray-500">
-                        <p className="mb-2">Você ainda não tem nenhuma trilha.</p>
-                        <p className="text-sm">Crie sua primeira trilha para começar a organizar seus estudos.</p>
-                    </div>
+                    <EmptyState
+                        title="Você ainda não tem nenhuma trilha"
+                        description="Crie sua primeira trilha para começar a organizar seus estudos."
+                    />
                 ) : (
                     <div className="grid sm:grid-cols-2 gap-4">
                         {tracks.map((track) => (
