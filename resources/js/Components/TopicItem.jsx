@@ -49,20 +49,20 @@ export default function TopicItem({ topic, onOpenNotes, activeSession }) {
 
     return (
         <div className="bg-gray-800 border border-gray-700 rounded-lg px-4 py-3">
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
                     <input
                         type="checkbox"
                         checked={topic.is_completed}
                         onChange={toggle}
-                        className="w-5 h-5 rounded accent-emerald-500 cursor-pointer"
+                        className="w-5 h-5 rounded accent-emerald-500 cursor-pointer shrink-0"
                     />
-                    <span className={topic.is_completed ? 'line-through text-gray-500' : 'text-gray-100'}>
+                    <span className={`truncate ${topic.is_completed ? 'line-through text-gray-500' : 'text-gray-100'}`}>
                         {topic.title}
                     </span>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-wrap sm:flex-nowrap sm:shrink-0">
                     {isStudyingThis ? (
                         <button onClick={stopStudying} className="text-sm text-red-400 hover:text-red-300 flex items-center gap-1">
                             ⏹ Parar

@@ -57,7 +57,7 @@ export default function Show({ track, activeSession }) {
                         <span className="mx-2">/</span>
                         <span className="text-gray-300">{track.title}</span>
                     </nav>
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                         <h2 className="text-xl font-semibold text-gray-100">{track.title}</h2>
                         <div className="flex items-center gap-4">
                             <button
