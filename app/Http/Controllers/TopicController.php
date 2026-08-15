@@ -33,9 +33,15 @@ class TopicController extends Controller
         return redirect()->back()->with('sucess', 'Tópico atualizado com sucesso.');
     }
 
-    public function toggle(Topic $topic) 
+    public function toggle(Topic $topic)
     {
         $this->authorize('update', $topic);
+
+        if (!$topic->is_completed && $topic->isBlocked()) {
+            return redirect()->back()->withErrors([
+                'topic' => 'Este tópico depende de outros ainda não concluídos.',
+            ]);
+        }
 
         $topic->update([
             'is_completed' => ! $topic->is_completed,

@@ -11,6 +11,7 @@ use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NoteSearchController;
 use App\Http\Controllers\StudySessionController;
+use App\Http\Controllers\TopicDependencyController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -49,6 +50,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/topics/{topic}/study-sessions/start', [StudySessionController::class, 'start'])->name('study-sessions.start');
     Route::patch('/study-sessions/{studySession}/stop', [StudySessionController::class, 'stop'])->name('study-sessions.stop');
+
+    Route::post('/topics/{topic}/dependencies', [TopicDependencyController::class, 'store'])->name('topics.dependencies.store');
+    Route::delete('/topics/{topic}/dependencies/{dependsOnTopic}', [TopicDependencyController::class, 'destroy'])->name('topics.dependencies.destroy');
 });
 
 require __DIR__.'/auth.php';

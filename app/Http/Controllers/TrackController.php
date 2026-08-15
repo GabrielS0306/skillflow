@@ -52,7 +52,7 @@ class TrackController extends Controller
         $this->authorize('view', $track);
 
         $track->load(['topics' => function ($query) {
-            $query->orderBy('order')->with(['notes', 'resources']);
+            $query->orderBy('order')->with(['notes', 'resources', 'dependencies']);
         }]);
 
         $activeSession = \App\Models\StudySession::where('user_id', auth()->id())
