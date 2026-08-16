@@ -106,6 +106,7 @@ export default function Show({ track, activeSession }) {
                                 topic={topic}
                                 onOpenNotes={(t) => setActiveTopicId(t.id)}
                                 activeSession={activeSession}
+                                allTopics={track.topics}
                             />
                         ))}
                     </div>

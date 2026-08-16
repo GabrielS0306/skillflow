@@ -2,16 +2,25 @@ import { useState } from 'react';
 import { router } from '@inertiajs/react';
 import TopicActions from './TopicActions';
 import TopicResources from './TopicResources';
+import TopicDependencies from './TopicDependencies';
 
-export default function TopicItem({ topic, onOpenNotes, activeSession }) {
+export default function TopicItem({ topic, onOpenNotes, activeSession, allTopics }) {
     const [showResources, setShowResources] = useState(false);
+    const [showDependencies, setShowDependencies] = useState(false);
     const [toggling, setToggling] = useState(false);
+
+    const isBlocked = !topic.is_completed && topic.dependencies?.some((d) => !d.is_completed);
 
     function toggle() {
         router.patch(route('topics.toggle', topic.id), {}, {
             preserveScroll: true,
             onStart: () => setToggling(true),
             onFinish: () => setToggling(false),
+            onError: (errors) => {
+                if (errors.topic) {
+                    alert(errors.topic);
+                }
+            },
         });
     }
 
@@ -29,24 +38,27 @@ export default function TopicItem({ topic, onOpenNotes, activeSession }) {
                         type="checkbox"
                         checked={topic.is_completed}
                         onChange={toggle}
-                        disabled={toggling}
-                        className="w-5 h-5 rounded accent-emerald-500 cursor-pointer shrink-0 disabled:opacity-50"
+                        disabled={toggling || isBlocked}
+                        className="w-5 h-5 rounded accent-emerald-500 cursor-pointer shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
                     />
                     <span className={`truncate ${topic.is_completed ? 'line-through text-gray-500' : 'text-gray-100'}`}>
-                        {topic.title}
+                        {isBlocked && '🔒 '}{topic.title}
                     </span>
                 </div>
 
                 <TopicActions
                     topic={topic}
                     activeSession={activeSession}
+                    isBlocked={isBlocked}
                     onOpenNotes={onOpenNotes}
                     onToggleResources={() => setShowResources(!showResources)}
+                    onToggleDependencies={() => setShowDependencies(!showDependencies)}
                     onDestroy={destroy}
                 />
             </div>
 
             {showResources && <TopicResources topic={topic} />}
+            {showDependencies && <TopicDependencies topic={topic} allTopics={allTopics} />}
         </div>
     );
 }

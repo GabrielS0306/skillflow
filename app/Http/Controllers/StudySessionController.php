@@ -11,6 +11,12 @@ class StudySessionController extends Controller
     {
         $this->authorize('update', $topic);
 
+        if ($topic->isBlocked()) {
+            return redirect()->back()->withErrors([
+                'topic' => 'Este tópico está bloqueado por dependências não concluídas.',
+            ]);
+        }
+
         $userId = auth()->id();
 
         // Fecha qualquer sessão aberta antes de iniciar uma nova

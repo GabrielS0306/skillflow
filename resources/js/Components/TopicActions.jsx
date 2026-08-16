@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { router } from '@inertiajs/react';
 
-export default function TopicActions({ topic, activeSession, onOpenNotes, onToggleResources, onDestroy }) {
+export default function TopicActions({ topic, activeSession, isBlocked, onOpenNotes, onToggleResources, onToggleDependencies, onDestroy }) {
     const [loading, setLoading] = useState(false);
     const isStudyingThis = activeSession?.topic_id === topic.id;
 
@@ -30,8 +30,9 @@ export default function TopicActions({ topic, activeSession, onOpenNotes, onTogg
             ) : (
                 <button
                     onClick={startStudying}
-                    disabled={!!activeSession || loading}
+                    disabled={!!activeSession || loading || isBlocked}
                     className="text-sm text-emerald-400 hover:text-emerald-300 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1"
+                    title={isBlocked ? 'Conclua as dependências antes de estudar este tópico' : undefined}
                 >
                     {loading ? '...' : '▶ Estudar'}
                 </button>
@@ -41,6 +42,9 @@ export default function TopicActions({ topic, activeSession, onOpenNotes, onTogg
             </button>
             <button onClick={onToggleResources} className="text-sm text-gray-400 hover:text-blue-400">
                 Recursos {topic.resources?.length > 0 && `(${topic.resources.length})`}
+            </button>
+            <button onClick={onToggleDependencies} className="text-sm text-gray-400 hover:text-purple-400">
+                Dependências {topic.dependencies?.length > 0 && `(${topic.dependencies.length})`}
             </button>
             <button onClick={onDestroy} className="text-gray-500 hover:text-red-400 text-sm">
                 Excluir
