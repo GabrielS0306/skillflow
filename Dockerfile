@@ -18,4 +18,4 @@ ENV PHP_OPCACHE_ENABLE=1
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-USER www-data
+RUN chown -R www-data:www-data /var/www/html
